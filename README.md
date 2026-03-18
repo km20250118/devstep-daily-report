@@ -19,6 +19,14 @@ open docs/wireframes.html
 
 ---
 
+## ER図
+
+![ER図](docs/er-diagram.png)
+
+> `docs/er-diagram.html` をブラウザで開くと全デバイスで確認できます。
+
+---
+
 ## スクリーンショット
 
 > Week4実装後に追加予定
