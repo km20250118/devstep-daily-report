@@ -23,7 +23,6 @@ open docs/wireframes.html
 
 ![ER図](docs/er-diagram.png)
 
-> `docs/er-diagram.html` をブラウザで開くと全デバイスで確認できます。
 
 ---
 
