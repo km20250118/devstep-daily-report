@@ -3,7 +3,7 @@
 チームの日々の業務内容を記録・共有するWebアプリケーションです。  
 メンバーが日報を投稿し、チーム内でコメントを通じてフィードバックを行えます。
 
-> **デモURL:** https://devstep-daily-report.vercel.app （Week4デプロイ後に更新）
+> **デモURL:** https://devstep-daily-report-two.vercel.app
 
 ---
 
@@ -23,12 +23,13 @@ open docs/wireframes.html
 
 ![ER図](docs/er-diagram.png)
 
+> `docs/er-diagram.html` をブラウザで開くと全デバイスで確認できます。
 
 ---
 
 ## スクリーンショット
 
-> Week4実装後に追加予定
+> 追加予定（Week4デプロイ済み: https://devstep-daily-report-two.vercel.app）
 
 ---
 
@@ -83,7 +84,7 @@ open docs/wireframes.html
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/<your-username>/devstep-daily-report.git
+git clone https://github.com/km20250118/devstep-daily-report.git
 cd devstep-daily-report
 
 # 依存パッケージをインストール
