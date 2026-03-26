@@ -5,8 +5,9 @@ import EditReportForm from '@/components/reports/EditReportForm'
 export default async function EditReportPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -15,7 +16,7 @@ export default async function EditReportPage({
   const { data: report } = await supabase
     .from('daily_reports')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!report) notFound()

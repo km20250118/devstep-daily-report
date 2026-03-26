@@ -15,8 +15,9 @@ const CATEGORY_COLOR: Record<string, string> = {
 export default async function ReportDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -25,7 +26,7 @@ export default async function ReportDetailPage({
   const { data: report } = await supabase
     .from('daily_reports')
     .select('*, profiles(id, name, avatar_url)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!report) notFound()
@@ -33,7 +34,7 @@ export default async function ReportDetailPage({
   const { data: comments } = await supabase
     .from('comments')
     .select('*, profiles(id, name, avatar_url)')
-    .eq('report_id', params.id)
+    .eq('report_id', id)
     .order('created_at', { ascending: true })
 
   const isOwner = user.id === report.user_id
