@@ -27,12 +27,6 @@ open docs/wireframes.html
 
 ---
 
-## スクリーンショット
-
-> 追加予定（Week4デプロイ済み: https://devstep-daily-report-two.vercel.app）
-
----
-
 ## 技術スタック
 
 | カテゴリ | 技術 |
