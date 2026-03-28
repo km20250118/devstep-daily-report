@@ -61,14 +61,14 @@ export default function NewReportPage() {
     }
 
     router.push('/reports')
-    router.refresh()
+    
   }
 
   return (
     <div className="max-w-2xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-semibold text-zinc-900">日報を作成</h1>
-        <Button variant="ghost" onClick={() => router.back()}>← キャンセル</Button>
+        <Button variant="ghost" onClick={() => router.back()} className="cursor-pointer">← キャンセル</Button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -96,20 +96,20 @@ export default function NewReportPage() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className={errors.date ? 'border-red-500' : ''}
+              className={`cursor-pointer${errors.date ? ' border-red-500' : ''}`}
             />
             {errors.date && <p className="text-xs text-red-500">{errors.date}</p>}
           </div>
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger>
+              <SelectTrigger className="cursor-pointer">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="開発">開発</SelectItem>
-                <SelectItem value="会議">会議</SelectItem>
-                <SelectItem value="その他">その他</SelectItem>
+                <SelectItem value="開発" className="cursor-pointer">開発</SelectItem>
+                <SelectItem value="会議" className="cursor-pointer">会議</SelectItem>
+                <SelectItem value="その他" className="cursor-pointer">その他</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -135,8 +135,8 @@ export default function NewReportPage() {
         {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
 
         <div className="flex justify-end gap-3 pt-2">
-          <Button type="button" variant="outline" onClick={() => router.back()}>キャンセル</Button>
-          <Button type="submit" disabled={loading}>
+          <Button type="button" variant="outline" onClick={() => router.back()} className="cursor-pointer">キャンセル</Button>
+          <Button type="submit" disabled={loading} className="cursor-pointer">
             {loading ? '作成中...' : '作成する'}
           </Button>
         </div>

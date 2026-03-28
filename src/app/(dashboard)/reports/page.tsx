@@ -1,69 +1,73 @@
-import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { DailyReport } from '@/types'
+import { Category } from '@/types'
 import { format } from 'date-fns'
 
-const CATEGORY_COLOR: Record<string, string> = {
-  '開発': 'bg-green-100 text-green-700',
-  '会議': 'bg-yellow-100 text-yellow-700',
-  'その他': 'bg-zinc-100 text-zinc-600',
+type Report = {
+  id: string
+  title: string
+  date: string
+  category: Category
+  content: string
+  created_at: string
 }
 
-export default async function ReportsPage() {
-  const supabase = await createClient()
+export default function ReportsPage() {
+  const router = useRouter()
+  const [reports, setReports] = useState<Report[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const { data: reports, error } = await supabase
-    .from('daily_reports')
-    .select('*, profiles(id, name, avatar_url), comments(count)')
-    .order('created_at', { ascending: false })
+  useEffect(() => {
+    const fetchReports = async () => {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('daily_reports')
+        .select('*')
+        .order('date', { ascending: false })
 
-  if (error) {
-    return <p className="text-red-500">日報の取得に失敗しました</p>
-  }
+      if (!error && data) {
+        setReports(data)
+      }
+      setLoading(false)
+    }
+    fetchReports()
+  }, [])
 
   return (
-    <div>
+    <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-lg font-semibold text-zinc-900">チームの日報</h1>
-          <p className="text-sm text-zinc-500">{reports?.length ?? 0}件</p>
-        </div>
-        <Link href="/reports/new">
-          <Button>＋ 日報を作成</Button>
-        </Link>
+        <h1 className="text-lg font-semibold text-zinc-900">日報一覧</h1>
+        <Button onClick={() => router.push(`/reports/new`)} className="cursor-pointer">+ 新規作成</Button>
       </div>
 
-      <div className="space-y-3">
-        {reports?.length === 0 && (
-          <p className="text-zinc-500 text-sm py-8 text-center">まだ日報がありません</p>
-        )}
-        {reports?.map((report: DailyReport & { comments: { count: number }[] }) => (
-          <Link key={report.id} href={`/reports/${report.id}`}>
-            <div className="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold flex-shrink-0">
-                  {report.profiles?.name?.[0] ?? '?'}
-                </div>
-                <span className="font-medium text-zinc-900 flex-1 truncate">{report.title}</span>
-                <span className={`text-xs px-2 py-0.5 rounded font-medium ${CATEGORY_COLOR[report.category]}`}>
-                  {report.category}
-                </span>
-                <span className="text-xs text-zinc-400 whitespace-nowrap">
-                  {format(new Date(report.date), 'yyyy/MM/dd')}
-                </span>
+      {loading ? (
+        <p className="text-sm text-zinc-500">読み込み中...</p>
+      ) : reports.length === 0 ? (
+        <p className="text-sm text-zinc-500">日報がまだありません。</p>
+      ) : (
+        <ul className="space-y-3">
+          {reports.map((report) => (
+            <li
+              key={report.id}
+              className="border border-zinc-200 rounded-lg p-4 cursor-pointer hover:bg-zinc-50 transition"
+              onClick={() => router.push(`/reports/${report.id}`)}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-medium text-zinc-900">{report.title}</span>
+                <span className="text-xs text-zinc-400">{format(new Date(report.date), 'yyyy/MM/dd')}</span>
               </div>
-              <p className="text-sm text-zinc-500 line-clamp-2">{report.content}</p>
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-xs text-zinc-400">{report.profiles?.name}</span>
-                <span className="text-xs text-zinc-400">
-                  💬 {report.comments?.[0]?.count ?? 0}件
-                </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded">{report.category}</span>
+                <span className="text-xs text-zinc-400 truncate">{report.content.slice(0, 60)}...</span>
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

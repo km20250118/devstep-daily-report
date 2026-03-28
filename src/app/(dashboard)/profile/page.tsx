@@ -98,7 +98,7 @@ export default function ProfilePage() {
               <p className="text-xs text-zinc-400">メールアドレスは変更できません</p>
             </div>
             <div className="flex justify-end">
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} className="cursor-pointer">
                 {loading ? '保存中...' : saved ? '✓ 保存しました' : '保存する'}
               </Button>
             </div>

@@ -33,7 +33,7 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
           className={`flex items-center gap-2 px-2 py-2 rounded-md text-sm transition-colors ${
             pathname === item.href
               ? 'bg-zinc-100 text-zinc-900 font-medium'
-              : 'text-zinc-600 hover:bg-zinc-100'
+              : 'text-zinc-600 hover:bg-zinc-100 cursor-pointer'
           }`}
         >
           <span>{item.icon}</span>
@@ -52,14 +52,14 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
           className={`flex items-center gap-2 px-2 py-2 rounded-md text-sm transition-colors ${
             pathname === '/profile'
               ? 'bg-zinc-100 text-zinc-900 font-medium'
-              : 'text-zinc-600 hover:bg-zinc-100'
+              : 'text-zinc-600 hover:bg-zinc-100 cursor-pointer'
           }`}
         >
           <span>⚙️</span>プロフィール
         </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm text-zinc-600 hover:bg-zinc-100"
+          className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm text-zinc-600 hover:bg-zinc-100 cursor-pointer"
         >
           <span>🚪</span>ログアウト
         </button>

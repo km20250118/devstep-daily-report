@@ -3,8 +3,12 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 import DeleteReportButton from '@/components/reports/DeleteReportButton'
 import CommentSection from '@/components/reports/CommentSection'
+
+const TZ = 'Asia/Tokyo'
+const toJST = (dateStr: string) => toZonedTime(new Date(dateStr), TZ)
 
 const CATEGORY_COLOR: Record<string, string> = {
   '開発': 'bg-green-100 text-green-700',
@@ -43,7 +47,7 @@ export default async function ReportDetailPage({
     <div className="max-w-2xl">
       <div className="mb-4">
         <Link href="/reports">
-          <Button variant="ghost" size="sm">← 一覧へ戻る</Button>
+          <Button variant="ghost" size="sm" className="cursor-pointer">← 一覧へ戻る</Button>
         </Link>
       </div>
 
@@ -66,8 +70,8 @@ export default async function ReportDetailPage({
           </div>
           {isOwner && (
             <div className="flex gap-2 flex-shrink-0">
-              <Link href={`/reports/${report.id}/edit`}>
-                <Button variant="outline" size="sm">編集</Button>
+              <Link href={`/reports/${report.id}/edit`} className="cursor-pointer">
+                <Button variant="outline" size="sm" className="cursor-pointer">編集</Button>
               </Link>
               <DeleteReportButton reportId={report.id} />
             </div>
@@ -81,9 +85,9 @@ export default async function ReportDetailPage({
         </div>
 
         <div className="text-xs text-zinc-400 mt-4">
-          作成: {format(new Date(report.created_at), 'yyyy/MM/dd HH:mm')}
+          作成: {format(toJST(report.created_at), 'yyyy/MM/dd HH:mm')}
           {report.updated_at !== report.created_at &&
-            ` ／ 更新: ${format(new Date(report.updated_at), 'yyyy/MM/dd HH:mm')}`}
+            ` ／ 更新: ${format(toJST(report.updated_at), 'yyyy/MM/dd HH:mm')}`}
         </div>
       </div>
 

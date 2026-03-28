@@ -6,6 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Comment } from '@/types'
 import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
+
+const TZ = 'Asia/Tokyo'
+const toJST = (dateStr: string) => toZonedTime(new Date(dateStr), TZ)
 
 export default function CommentSection({
   reportId,
@@ -72,12 +76,12 @@ export default function CommentSection({
               </div>
               <span className="text-sm font-medium text-zinc-700">{comment.profiles?.name}</span>
               <span className="text-xs text-zinc-400">
-                {format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm')}
+                {format(toJST(comment.created_at), 'yyyy/MM/dd HH:mm')}
               </span>
               {comment.user_id === currentUserId && (
                 <button
                   onClick={() => handleDelete(comment.id)}
-                  className="ml-auto text-xs text-red-400 hover:text-red-600"
+                  className="ml-auto text-xs text-red-400 hover:text-red-600 cursor-pointer"
                 >
                   削除
                 </button>
@@ -97,7 +101,7 @@ export default function CommentSection({
           className="flex-1 resize-none"
           maxLength={500}
         />
-        <Button type="submit" disabled={loading || !content.trim()} className="self-end">
+        <Button type="submit" disabled={loading || !content.trim()} className="self-end cursor-pointer">
           {loading ? '送信中...' : '送信'}
         </Button>
       </form>
