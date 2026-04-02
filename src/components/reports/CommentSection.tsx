@@ -35,30 +35,38 @@ export default function CommentSection({
     setLoading(true)
     setError('')
 
-    const supabase = createClient()
-    const { data, error } = await supabase
-      .from('comments')
-      .insert({ report_id: reportId, user_id: currentUserId, content: content.trim() })
-      .select('*, profiles(id, name, avatar_url)')
-      .single()
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({ report_id: reportId, user_id: currentUserId, content: content.trim() })
+        .select('*, profiles(id, name, avatar_url)')
+        .single()
 
-    if (error) {
-      setError('コメントの投稿に失敗しました')
+      if (error) throw error
+
+      setComments([...comments, data])
+      setContent('')
+    } catch (err) {
+      console.error(err)
+      setError('コメントの投稿に失敗しました。もう一度お試しください。')
+    } finally {
       setLoading(false)
-      return
     }
-
-    setComments([...comments, data])
-    setContent('')
-    setLoading(false)
   }
 
   const handleDelete = async (commentId: string) => {
     if (!confirm('このコメントを削除しますか？')) return
 
-    const supabase = createClient()
-    await supabase.from('comments').delete().eq('id', commentId)
-    setComments(comments.filter((c) => c.id !== commentId))
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('comments').delete().eq('id', commentId)
+      if (error) throw error
+      setComments(comments.filter((c) => c.id !== commentId))
+    } catch (err) {
+      console.error(err)
+      alert('削除に失敗しました。もう一度お試しください。')
+    }
   }
 
   return (
@@ -105,7 +113,11 @@ export default function CommentSection({
           {loading ? '送信中...' : '送信'}
         </Button>
       </form>
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm mt-2">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

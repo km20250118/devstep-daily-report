@@ -38,30 +38,31 @@ export default function NewReportPage() {
     if (!validate()) return
     setLoading(true)
 
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) {
-      router.push('/login')
-      return
-    }
+      if (!user) {
+        router.push('/login')
+        return
+      }
 
-    const { error } = await supabase.from('daily_reports').insert({
-      user_id: user.id,
-      title: title.trim(),
-      date,
-      category,
-      content: content.trim(),
-    })
+      const { error } = await supabase.from('daily_reports').insert({
+        user_id: user.id,
+        title: title.trim(),
+        date,
+        category,
+        content: content.trim(),
+      })
 
-    if (error) {
-      setErrors({ submit: '日報の作成に失敗しました' })
+      if (error) throw error
+
+      router.push('/reports')
+    } catch (err) {
+      console.error(err)
+      setErrors({ submit: '日報の作成に失敗しました。もう一度お試しください。' })
       setLoading(false)
-      return
     }
-
-    router.push('/reports')
-    
   }
 
   return (
@@ -132,7 +133,11 @@ export default function NewReportPage() {
           </div>
         </div>
 
-        {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+        {errors.submit && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            {errors.submit}
+          </div>
+        )}
 
         <div className="flex justify-end gap-3 pt-2">
           <Button type="button" variant="outline" onClick={() => router.back()} className="cursor-pointer">キャンセル</Button>

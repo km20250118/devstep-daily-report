@@ -13,22 +13,30 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [fetchError, setFetchError] = useState('')
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
 
-      if (profile) {
-        setName(profile.name)
-        setEmail(profile.email)
+        if (error) throw error
+
+        if (profile) {
+          setName(profile.name)
+          setEmail(profile.email)
+        }
+      } catch (err) {
+        console.error(err)
+        setFetchError('プロフィールの取得に失敗しました。ページを再読み込みしてください。')
       }
     }
     fetchProfile()
@@ -43,24 +51,34 @@ export default function ProfilePage() {
     setLoading(true)
     setError('')
 
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ name: name.trim() })
-      .eq('id', user.id)
+      const { error } = await supabase
+        .from('profiles')
+        .update({ name: name.trim() })
+        .eq('id', user.id)
 
-    if (error) {
-      setError('更新に失敗しました')
+      if (error) throw error
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (err) {
+      console.error(err)
+      setError('更新に失敗しました。もう一度お試しください。')
+    } finally {
       setLoading(false)
-      return
     }
+  }
 
-    setSaved(true)
-    setLoading(false)
-    setTimeout(() => setSaved(false), 3000)
+  if (fetchError) {
+    return (
+      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm max-w-lg">
+        {fetchError}
+      </div>
+    )
   }
 
   return (

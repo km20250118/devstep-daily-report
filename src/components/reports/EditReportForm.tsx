@@ -34,20 +34,22 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
     if (!validate()) return
     setLoading(true)
 
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('daily_reports')
-      .update({ title: title.trim(), date, category, content: content.trim() })
-      .eq('id', report.id)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('daily_reports')
+        .update({ title: title.trim(), date, category, content: content.trim() })
+        .eq('id', report.id)
 
-    if (error) {
-      setErrors({ submit: '更新に失敗しました' })
+      if (error) throw error
+
+      router.push(`/reports/${report.id}`)
+      router.refresh()
+    } catch (err) {
+      console.error(err)
+      setErrors({ submit: '更新に失敗しました。もう一度お試しください。' })
       setLoading(false)
-      return
     }
-
-    router.push(`/reports/${report.id}`)
-    router.refresh()
   }
 
   return (
@@ -113,7 +115,11 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
           </div>
         </div>
 
-        {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+        {errors.submit && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            {errors.submit}
+          </div>
+        )}
 
         <div className="flex justify-end gap-3 pt-2">
           <Button type="button" variant="outline" onClick={() => router.back()} className="cursor-pointer">キャンセル</Button>
