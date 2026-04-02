@@ -88,13 +88,13 @@ export default function SignupPage() {
               />
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? '登録中...' : 'アカウントを作成'}
             </Button>
           </form>
           <div className="text-center text-sm text-zinc-500 mt-4">
             すでにアカウントをお持ちの方は{' '}
-            <Link href="/login" className="text-zinc-900 font-medium underline">
+            <Link href="/login" className="text-zinc-900 font-medium underline cursor-pointer">
               ログイン
             </Link>
           </div>

@@ -39,7 +39,7 @@ export default function ResetPasswordPage() {
           </CardHeader>
           <CardContent>
             <Link href="/login">
-              <Button variant="outline" className="w-full">ログインページへ戻る</Button>
+              <Button variant="outline" className="w-full cursor-pointer">ログインページへ戻る</Button>
             </Link>
           </CardContent>
         </Card>
@@ -67,12 +67,12 @@ export default function ResetPasswordPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? '送信中...' : 'リセットメールを送信'}
             </Button>
           </form>
           <div className="text-center text-sm text-zinc-500 mt-4">
-            <Link href="/login" className="underline">ログインページへ戻る</Link>
+            <Link href="/login" className="underline cursor-pointer">ログインページへ戻る</Link>
           </div>
         </CardContent>
       </Card>
