@@ -39,8 +39,11 @@ export default function SearchFilter({ users }: Props) {
     searchParams.get('from') ||
     searchParams.get('to')
 
+  // searchParamsが変わるたびにコンポーネントを再マウントしてdefaultValueをリセット
+  const filterKey = searchParams.toString()
+
   return (
-    <div className="space-y-3 mb-6">
+    <div className="space-y-3 mb-6" key={filterKey}>
       <div className="flex gap-2 items-end">
         <div className="flex flex-col gap-1 flex-1">
           <span className="text-xs text-zinc-400">キーワード</span>
@@ -81,6 +84,7 @@ export default function SearchFilter({ users }: Props) {
       </div>
       <div className="flex gap-2 flex-wrap items-center">
         <Select
+          key={`userId-${searchParams.get('userId') ?? 'all'}`}
           defaultValue={searchParams.get('userId') ?? 'all'}
           onValueChange={(v) => updateParams('userId', v)}
         >
@@ -98,6 +102,7 @@ export default function SearchFilter({ users }: Props) {
         </Select>
 
         <Select
+          key={`category-${searchParams.get('category') ?? 'all'}`}
           defaultValue={searchParams.get('category') ?? 'all'}
           onValueChange={(v) => updateParams('category', v)}
         >
