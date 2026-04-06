@@ -56,9 +56,17 @@ export default async function ReportDetailPage({
           <div className="flex-1">
             <h1 className="text-xl font-semibold text-zinc-900 mb-3">{report.title}</h1>
             <div className="flex items-center gap-3 flex-wrap">
-              <div className="w-7 h-7 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold">
-                {report.profiles?.name?.[0] ?? '?'}
-              </div>
+              {report.profiles?.avatar_url ? (
+                <img
+                  src={report.profiles.avatar_url}
+                  alt={report.profiles.name ?? ''}
+                  className="w-7 h-7 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold">
+                  {report.profiles?.name?.[0] ?? '?'}
+                </div>
+              )}
               <span className="text-sm font-medium text-zinc-700">{report.profiles?.name}</span>
               <span className={`text-xs px-2 py-0.5 rounded font-medium ${CATEGORY_COLOR[report.category]}`}>
                 {report.category}

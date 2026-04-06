@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,8 @@ type Props = {
 export default function SearchFilter({ users }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [keyword, setKeyword] = useState(searchParams.get('q') ?? '')
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const updateParams = useCallback(
     (key: string, value: string) => {
@@ -28,6 +30,43 @@ export default function SearchFilter({ users }: Props) {
     [router, searchParams]
   )
 
+  const isComposing = useRef(false)
+
+  const handleKeywordChange = (value: string) => {
+    setKeyword(value)
+    if (isComposing.current) return
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (value) {
+        params.set('q', value)
+      } else {
+        params.delete('q')
+      }
+      params.delete('page')
+      router.push(`/reports?${params.toString()}`)
+    }, 300)
+  }
+
+  const handleCompositionEnd = (value: string) => {
+    isComposing.current = false
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (value) {
+        params.set('q', value)
+      } else {
+        params.delete('q')
+      }
+      params.delete('page')
+      router.push(`/reports?${params.toString()}`)
+    }, 300)
+  }
+
+  useEffect(() => {
+    setKeyword(searchParams.get('q') ?? '')
+  }, [searchParams])
+
   const handleReset = () => {
     router.push('/reports')
   }
@@ -39,56 +78,53 @@ export default function SearchFilter({ users }: Props) {
     searchParams.get('from') ||
     searchParams.get('to')
 
-  // searchParamsが変わるたびにコンポーネントを再マウントしてdefaultValueをリセット
   const filterKey = searchParams.toString()
 
   return (
     <div className="space-y-3 mb-6" key={filterKey}>
-      <div className="flex gap-2 items-end">
-        <div className="flex flex-col gap-1 flex-1">
-          <span className="text-xs text-zinc-400">キーワード</span>
-          <Input
-            placeholder="キーワードで検索..."
-            defaultValue={searchParams.get('q') ?? ''}
-            onChange={(e) => {
-              const val = e.target.value
-              const params = new URLSearchParams(searchParams.toString())
-              if (val) {
-                params.set('q', val)
-              } else {
-                params.delete('q')
-              }
-              params.delete('page')
-              router.push(`/reports?${params.toString()}`)
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
+
+      {/* キーワード：常に1行全幅 */}
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-zinc-400">キーワード</span>
+        <Input
+          placeholder="キーワードで検索..."
+          value={keyword}
+          onChange={(e) => handleKeywordChange(e.target.value)}
+          onCompositionStart={() => { isComposing.current = true }}
+          onCompositionEnd={(e) => handleCompositionEnd(e.currentTarget.value)}
+        />
+      </div>
+
+      {/* 日付：小さい画面では縦並び */}
+      <div className="flex flex-col xs:flex-row gap-2">
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
           <span className="text-xs text-zinc-400">開始日</span>
           <Input
             type="date"
             defaultValue={searchParams.get('from') ?? ''}
             onChange={(e) => updateParams('from', e.target.value)}
-            className="w-36 cursor-pointer"
+            className="cursor-pointer w-full"
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
           <span className="text-xs text-zinc-400">終了日</span>
           <Input
             type="date"
             defaultValue={searchParams.get('to') ?? ''}
             onChange={(e) => updateParams('to', e.target.value)}
-            className="w-36 cursor-pointer"
+            className="cursor-pointer w-full"
           />
         </div>
       </div>
+
+      {/* 投稿者・カテゴリ */}
       <div className="flex gap-2 flex-wrap items-center">
         <Select
           key={`userId-${searchParams.get('userId') ?? 'all'}`}
           defaultValue={searchParams.get('userId') ?? 'all'}
           onValueChange={(v) => updateParams('userId', v)}
         >
-          <SelectTrigger className="w-36 cursor-pointer">
+          <SelectTrigger className="w-full sm:w-36 cursor-pointer">
             <SelectValue placeholder="投稿者" />
           </SelectTrigger>
           <SelectContent>
@@ -106,7 +142,7 @@ export default function SearchFilter({ users }: Props) {
           defaultValue={searchParams.get('category') ?? 'all'}
           onValueChange={(v) => updateParams('category', v)}
         >
-          <SelectTrigger className="w-36 cursor-pointer">
+          <SelectTrigger className="w-full sm:w-36 cursor-pointer">
             <SelectValue placeholder="カテゴリ" />
           </SelectTrigger>
           <SelectContent>
@@ -123,6 +159,7 @@ export default function SearchFilter({ users }: Props) {
           </Button>
         )}
       </div>
+
     </div>
   )
 }

@@ -13,19 +13,37 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(false)
+
+  const validateField = (name: string, value: string): string => {
+    if (name === 'email' && !value.trim()) return 'メールアドレスは必須です'
+    if (name === 'password' && !value) return 'パスワードは必須です'
+    return ''
+  }
+
+  const handleBlur = (name: string, value: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }))
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setLoading(true)
+    const newErrors = {
+      email: validateField('email', email),
+      password: validateField('password', password),
+    }
+    setErrors(newErrors)
+    setTouched({ email: true, password: true })
+    if (Object.values(newErrors).some(Boolean)) return
 
+    setLoading(true)
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('メールアドレスまたはパスワードが正しくありません')
+      setErrors({ submit: 'メールアドレスまたはパスワードが正しくありません' })
       setLoading(false)
       return
     }
@@ -51,9 +69,11 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={(e) => handleBlur('email', e.target.value)}
                 placeholder="you@example.com"
-                required
+                className={errors.email && touched.email ? 'border-red-500' : ''}
               />
+              {errors.email && touched.email && <p className="text-xs text-red-500">{errors.email}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">パスワード</Label>
@@ -62,22 +82,24 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
+                onBlur={(e) => handleBlur('password', e.target.value)}
+                className={errors.password && touched.password ? 'border-red-500' : ''}
               />
+              {errors.password && touched.password && <p className="text-xs text-red-500">{errors.password}</p>}
               <div className="text-right">
-                <Link href="/reset-password" className="text-xs text-zinc-500 underline">
+                <Link href="/reset-password" className="text-xs text-zinc-500 underline cursor-pointer">
                   パスワードを忘れた場合
                 </Link>
               </div>
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
             <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? 'ログイン中...' : 'ログイン'}
             </Button>
           </form>
           <div className="text-center text-sm text-zinc-500 mt-4">
             アカウントをお持ちでない方は{' '}
-            <Link href="/signup" className="text-zinc-900 font-medium underline">
+            <Link href="/signup" className="text-zinc-900 font-medium underline cursor-pointer whitespace-nowrap">
               新規登録
             </Link>
           </div>

@@ -21,7 +21,8 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen bg-zinc-50">
       <Sidebar profile={profile} />
-      <main className="flex-1 overflow-auto p-6">
+      {/* モバイル時はトップバー分の余白を追加 */}
+      <main className="flex-1 overflow-auto p-4 md:p-6 pt-16 md:pt-6">
         {children}
       </main>
     </div>

@@ -14,20 +14,37 @@ export default function SignupPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(false)
+
+  const validateField = (name: string, value: string): string => {
+    if (name === 'name' && !value.trim()) return '表示名は必須です'
+    if (name === 'email' && !value.trim()) return 'メールアドレスは必須です'
+    if (name === 'password') {
+      if (!value) return 'パスワードは必須です'
+      if (value.length < 6) return 'パスワードは6文字以上で入力してください'
+    }
+    return ''
+  }
+
+  const handleBlur = (name: string, value: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }))
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+  }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setLoading(true)
-
-    if (password.length < 6) {
-      setError('パスワードは6文字以上で入力してください')
-      setLoading(false)
-      return
+    const newErrors = {
+      name: validateField('name', name),
+      email: validateField('email', email),
+      password: validateField('password', password),
     }
+    setErrors(newErrors)
+    setTouched({ name: true, email: true, password: true })
+    if (Object.values(newErrors).some(Boolean)) return
 
+    setLoading(true)
     const supabase = createClient()
     const { error } = await supabase.auth.signUp({
       email,
@@ -36,7 +53,7 @@ export default function SignupPage() {
     })
 
     if (error) {
-      setError('登録に失敗しました。別のメールアドレスをお試しください')
+      setErrors({ submit: '登録に失敗しました。別のメールアドレスをお試しください' })
       setLoading(false)
       return
     }
@@ -62,9 +79,11 @@ export default function SignupPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onBlur={(e) => handleBlur('name', e.target.value)}
                 placeholder="山田 太郎"
-                required
+                className={errors.name && touched.name ? 'border-red-500' : ''}
               />
+              {errors.name && touched.name && <p className="text-xs text-red-500">{errors.name}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
@@ -73,9 +92,11 @@ export default function SignupPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={(e) => handleBlur('email', e.target.value)}
                 placeholder="you@example.com"
-                required
+                className={errors.email && touched.email ? 'border-red-500' : ''}
               />
+              {errors.email && touched.email && <p className="text-xs text-red-500">{errors.email}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">パスワード（6文字以上）</Label>
@@ -84,10 +105,12 @@ export default function SignupPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
+                onBlur={(e) => handleBlur('password', e.target.value)}
+                className={errors.password && touched.password ? 'border-red-500' : ''}
               />
+              {errors.password && touched.password && <p className="text-xs text-red-500">{errors.password}</p>}
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
             <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? '登録中...' : 'アカウントを作成'}
             </Button>

@@ -20,17 +20,47 @@ export default function NewReportPage() {
   const [category, setCategory] = useState<Category>('開発')
   const [content, setContent] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(false)
 
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'title':
+        if (!value.trim()) return 'タイトルは必須です'
+        if (value.length > 50) return 'タイトルは50文字以内で入力してください'
+        return ''
+      case 'date':
+        if (!value) return '日付は必須です'
+        return ''
+      case 'content':
+        if (!value.trim()) return '内容は必須です'
+        if (value.length > 2000) return '内容は2000文字以内で入力してください'
+        return ''
+      default:
+        return ''
+    }
+  }
+
+  const handleChange = (name: string, value: string) => {
+    if (touched[name]) {
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+    }
+  }
+
+  const handleBlur = (name: string, value: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }))
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+  }
+
   const validate = () => {
-    const newErrors: Record<string, string> = {}
-    if (!title.trim()) newErrors.title = 'タイトルは必須です'
-    if (title.length > 50) newErrors.title = 'タイトルは50文字以内で入力してください'
-    if (!date) newErrors.date = '日付は必須です'
-    if (!content.trim()) newErrors.content = '内容は必須です'
-    if (content.length > 2000) newErrors.content = '内容は2000文字以内で入力してください'
+    const newErrors: Record<string, string> = {
+      title: validateField('title', title),
+      date: validateField('date', date),
+      content: validateField('content', content),
+    }
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    setTouched({ title: true, date: true, content: true })
+    return !Object.values(newErrors).some(Boolean)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,7 +90,7 @@ export default function NewReportPage() {
       router.push('/reports')
     } catch (err) {
       console.error(err)
-      setErrors({ submit: '日報の作成に失敗しました。もう一度お試しください。' })
+      setErrors((prev) => ({ ...prev, submit: '日報の作成に失敗しました。もう一度お試しください。' }))
       setLoading(false)
     }
   }
@@ -78,33 +108,37 @@ export default function NewReportPage() {
           <Input
             id="title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => { setTitle(e.target.value); handleChange('title', e.target.value) }}
+            onBlur={(e) => handleBlur('title', e.target.value)}
             placeholder="今日の業務タイトル"
-            className={errors.title ? 'border-red-500' : ''}
+            className={errors.title && touched.title ? 'border-red-500' : ''}
             maxLength={50}
           />
           <div className="flex justify-between">
-            {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
-            <span className="text-xs text-zinc-400 ml-auto">{title.length} / 50</span>
+            {errors.title && touched.title && <p className="text-xs text-red-500">{errors.title}</p>}
+            <span className={`text-xs ml-auto ${title.length > 45 ? 'text-orange-500' : 'text-zinc-400'}`}>
+              {title.length} / 50
+            </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="date">日付 <span className="text-red-500">*</span></Label>
             <Input
               id="date"
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className={`cursor-pointer${errors.date ? ' border-red-500' : ''}`}
+              onChange={(e) => { setDate(e.target.value); handleChange('date', e.target.value) }}
+              onBlur={(e) => handleBlur('date', e.target.value)}
+              className={`cursor-pointer w-full${errors.date && touched.date ? ' border-red-500' : ''}`}
             />
-            {errors.date && <p className="text-xs text-red-500">{errors.date}</p>}
+            {errors.date && touched.date && <p className="text-xs text-red-500">{errors.date}</p>}
           </div>
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger className="cursor-pointer">
+              <SelectTrigger className="cursor-pointer w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -121,15 +155,18 @@ export default function NewReportPage() {
           <Textarea
             id="content"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => { setContent(e.target.value); handleChange('content', e.target.value) }}
+            onBlur={(e) => handleBlur('content', e.target.value)}
             placeholder="今日の業務内容を記録してください"
             rows={8}
-            className={errors.content ? 'border-red-500' : ''}
+            className={errors.content && touched.content ? 'border-red-500' : ''}
             maxLength={2000}
           />
           <div className="flex justify-between">
-            {errors.content && <p className="text-xs text-red-500">{errors.content}</p>}
-            <span className="text-xs text-zinc-400 ml-auto">{content.length} / 2000</span>
+            {errors.content && touched.content && <p className="text-xs text-red-500">{errors.content}</p>}
+            <span className={`text-xs ml-auto ${content.length > 1900 ? 'text-orange-500' : 'text-zinc-400'}`}>
+              {content.length} / 2000
+            </span>
           </div>
         </div>
 

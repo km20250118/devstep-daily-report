@@ -79,9 +79,17 @@ export default function CommentSection({
         {comments.map((comment) => (
           <div key={comment.id} className="py-3 border-b border-zinc-100 last:border-0">
             <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold">
-                {comment.profiles?.name?.[0] ?? '?'}
-              </div>
+              {comment.profiles?.avatar_url ? (
+                <img
+                  src={comment.profiles.avatar_url}
+                  alt={comment.profiles.name ?? ''}
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold">
+                  {comment.profiles?.name?.[0] ?? '?'}
+                </div>
+              )}
               <span className="text-sm font-medium text-zinc-700">{comment.profiles?.name}</span>
               <span className="text-xs text-zinc-400">
                 {format(toJST(comment.created_at), 'yyyy/MM/dd HH:mm')}

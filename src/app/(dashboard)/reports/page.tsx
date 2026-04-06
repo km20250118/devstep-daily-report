@@ -90,9 +90,17 @@ export default async function ReportsPage({
           <Link key={report.id} href={`/reports/${report.id}`}>
             <div className="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold flex-shrink-0">
-                  {report.profiles?.name?.[0] ?? '?'}
-                </div>
+                {report.profiles?.avatar_url ? (
+                  <img
+                    src={report.profiles.avatar_url}
+                    alt={report.profiles.name ?? ''}
+                    className="w-6 h-6 rounded-full object-cover flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-semibold flex-shrink-0">
+                    {report.profiles?.name?.[0] ?? '?'}
+                  </div>
+                )}
                 <span className="font-medium text-zinc-900 flex-1 truncate">{report.title}</span>
                 <span className={`text-xs px-2 py-0.5 rounded font-medium ${CATEGORY_COLOR[report.category]}`}>
                   {report.category}

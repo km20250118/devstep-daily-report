@@ -17,16 +17,43 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
   const [category, setCategory] = useState<Category>(report.category as Category)
   const [content, setContent] = useState(report.content)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(false)
 
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'title':
+        if (!value.trim()) return 'タイトルは必須です'
+        if (value.length > 50) return 'タイトルは50文字以内で入力してください'
+        return ''
+      case 'content':
+        if (!value.trim()) return '内容は必須です'
+        if (value.length > 2000) return '内容は2000文字以内で入力してください'
+        return ''
+      default:
+        return ''
+    }
+  }
+
+  const handleChange = (name: string, value: string) => {
+    if (touched[name]) {
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+    }
+  }
+
+  const handleBlur = (name: string, value: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }))
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
+  }
+
   const validate = () => {
-    const newErrors: Record<string, string> = {}
-    if (!title.trim()) newErrors.title = 'タイトルは必須です'
-    if (title.length > 50) newErrors.title = 'タイトルは50文字以内で入力してください'
-    if (!content.trim()) newErrors.content = '内容は必須です'
-    if (content.length > 2000) newErrors.content = '内容は2000文字以内で入力してください'
+    const newErrors: Record<string, string> = {
+      title: validateField('title', title),
+      content: validateField('content', content),
+    }
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    setTouched({ title: true, content: true })
+    return !Object.values(newErrors).some(Boolean)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +74,7 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
       router.refresh()
     } catch (err) {
       console.error(err)
-      setErrors({ submit: '更新に失敗しました。もう一度お試しください。' })
+      setErrors((prev) => ({ ...prev, submit: '更新に失敗しました。もう一度お試しください。' }))
       setLoading(false)
     }
   }
@@ -65,17 +92,20 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
           <Input
             id="title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className={errors.title ? 'border-red-500' : ''}
+            onChange={(e) => { setTitle(e.target.value); handleChange('title', e.target.value) }}
+            onBlur={(e) => handleBlur('title', e.target.value)}
+            className={errors.title && touched.title ? 'border-red-500' : ''}
             maxLength={50}
           />
           <div className="flex justify-between">
-            {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
-            <span className="text-xs text-zinc-400 ml-auto">{title.length} / 50</span>
+            {errors.title && touched.title && <p className="text-xs text-red-500">{errors.title}</p>}
+            <span className={`text-xs ml-auto ${title.length > 45 ? 'text-orange-500' : 'text-zinc-400'}`}>
+              {title.length} / 50
+            </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="date">日付 <span className="text-red-500">*</span></Label>
             <Input
@@ -83,13 +113,13 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="cursor-pointer"
+              className="cursor-pointer w-full"
             />
           </div>
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger className="cursor-pointer"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="cursor-pointer w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="開発" className="cursor-pointer">開発</SelectItem>
                 <SelectItem value="会議" className="cursor-pointer">会議</SelectItem>
@@ -104,14 +134,17 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
           <Textarea
             id="content"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => { setContent(e.target.value); handleChange('content', e.target.value) }}
+            onBlur={(e) => handleBlur('content', e.target.value)}
             rows={8}
-            className={errors.content ? 'border-red-500' : ''}
+            className={errors.content && touched.content ? 'border-red-500' : ''}
             maxLength={2000}
           />
           <div className="flex justify-between">
-            {errors.content && <p className="text-xs text-red-500">{errors.content}</p>}
-            <span className="text-xs text-zinc-400 ml-auto">{content.length} / 2000</span>
+            {errors.content && touched.content && <p className="text-xs text-red-500">{errors.content}</p>}
+            <span className={`text-xs ml-auto ${content.length > 1900 ? 'text-orange-500' : 'text-zinc-400'}`}>
+              {content.length} / 2000
+            </span>
           </div>
         </div>
 
