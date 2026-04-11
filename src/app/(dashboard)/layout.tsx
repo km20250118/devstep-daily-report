@@ -19,10 +19,9 @@ export default async function DashboardLayout({
     .single()
 
   return (
-    <div className="flex h-screen bg-zinc-50">
+    <div className="flex h-screen bg-zinc-300" style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
       <Sidebar profile={profile} />
-      {/* モバイル時はトップバー分の余白を追加 */}
-      <main className="flex-1 overflow-auto p-4 md:p-6 pt-16 md:pt-6">
+      <main className="flex-1 overflow-auto px-6 py-6 pt-16 md:pt-6">
         {children}
       </main>
     </div>

@@ -10,7 +10,6 @@ export default async function EditReportPage({
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect('/login')
 
   const { data: report } = await supabase
@@ -22,5 +21,12 @@ export default async function EditReportPage({
   if (!report) notFound()
   if (report.user_id !== user.id) redirect('/reports')
 
-  return <EditReportForm report={report} />
+  return (
+    <div className="px-4 py-6 max-w-2xl">
+      <h1 className="text-xl font-semibold text-zinc-900 mb-6">日報を編集</h1>
+      <div className="bg-white border border-zinc-200 rounded-lg p-6">
+        <EditReportForm report={report} />
+      </div>
+    </div>
+  )
 }

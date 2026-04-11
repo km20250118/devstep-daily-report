@@ -96,7 +96,7 @@ export default function NewReportPage() {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="w-full">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-semibold text-zinc-900">日報を作成</h1>
         <Button variant="ghost" onClick={() => router.back()} className="cursor-pointer">← キャンセル</Button>
@@ -138,10 +138,10 @@ export default function NewReportPage() {
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger className="cursor-pointer w-full">
+              <SelectTrigger className="cursor-pointer w-full bg-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-zinc-200 shadow-md">
                 <SelectItem value="開発" className="cursor-pointer">開発</SelectItem>
                 <SelectItem value="会議" className="cursor-pointer">会議</SelectItem>
                 <SelectItem value="その他" className="cursor-pointer">その他</SelectItem>

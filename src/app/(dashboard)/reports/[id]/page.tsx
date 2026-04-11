@@ -24,7 +24,6 @@ export default async function ReportDetailPage({
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect('/login')
 
   const { data: report } = await supabase
@@ -44,13 +43,12 @@ export default async function ReportDetailPage({
   const isOwner = user.id === report.user_id
 
   return (
-    <div className="max-w-2xl">
+    <div className="w-full">
       <div className="mb-4">
         <Link href="/reports">
           <Button variant="ghost" size="sm" className="cursor-pointer">← 一覧へ戻る</Button>
         </Link>
       </div>
-
       <div className="bg-white border border-zinc-200 rounded-lg p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
@@ -85,20 +83,16 @@ export default async function ReportDetailPage({
             </div>
           )}
         </div>
-
         <hr className="border-zinc-100 my-4" />
-
         <div className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">
           {report.content}
         </div>
-
         <div className="text-xs text-zinc-400 mt-4">
           作成: {format(toJST(report.created_at), 'yyyy/MM/dd HH:mm')}
           {report.updated_at !== report.created_at &&
             ` ／ 更新: ${format(toJST(report.updated_at), 'yyyy/MM/dd HH:mm')}`}
         </div>
       </div>
-
       <CommentSection
         reportId={report.id}
         initialComments={comments ?? []}

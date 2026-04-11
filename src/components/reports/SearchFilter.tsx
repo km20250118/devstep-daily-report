@@ -124,10 +124,10 @@ export default function SearchFilter({ users }: Props) {
           defaultValue={searchParams.get('userId') ?? 'all'}
           onValueChange={(v) => updateParams('userId', v)}
         >
-          <SelectTrigger className="w-full sm:w-36 cursor-pointer">
+          <SelectTrigger className="w-full sm:w-36 cursor-pointer bg-white">
             <SelectValue placeholder="投稿者" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border border-zinc-200 shadow-md">
             <SelectItem value="all" className="cursor-pointer">全員</SelectItem>
             {users.map((u) => (
               <SelectItem key={u.id} value={u.id} className="cursor-pointer">
@@ -142,10 +142,10 @@ export default function SearchFilter({ users }: Props) {
           defaultValue={searchParams.get('category') ?? 'all'}
           onValueChange={(v) => updateParams('category', v)}
         >
-          <SelectTrigger className="w-full sm:w-36 cursor-pointer">
+          <SelectTrigger className="w-full sm:w-36 cursor-pointer bg-white">
             <SelectValue placeholder="カテゴリ" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border border-zinc-200 shadow-md">
             <SelectItem value="all" className="cursor-pointer">全カテゴリ</SelectItem>
             <SelectItem value="開発" className="cursor-pointer">開発</SelectItem>
             <SelectItem value="会議" className="cursor-pointer">会議</SelectItem>

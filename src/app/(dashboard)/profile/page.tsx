@@ -141,7 +141,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-lg">
+    <div className="w-full">
       <h1 className="text-lg font-semibold text-zinc-900 mb-6">プロフィール設定</h1>
 
       <Card>

@@ -40,7 +40,7 @@ export default function DeleteReportButton({ reportId }: { reportId: string }) {
         size="sm"
         onClick={handleDelete}
         disabled={loading}
-        className="text-red-500 border-red-200 hover:bg-red-50 cursor-pointer"
+        className="text-red-500 border-red-300 hover:bg-red-500 hover:text-white hover:border-red-500 cursor-pointer transition-colors"
       >
         {loading ? '削除中...' : '削除'}
       </Button>

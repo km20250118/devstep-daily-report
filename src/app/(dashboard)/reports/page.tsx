@@ -35,8 +35,10 @@ export default async function ReportsPage({
 
   if (usersError) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-        ユーザー情報の取得に失敗しました。ページを再読み込みしてください。
+      <div className="px-4 py-6">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+          ユーザー情報の取得に失敗しました。ページを再読み込みしてください。
+        </div>
       </div>
     )
   }
@@ -56,15 +58,18 @@ export default async function ReportsPage({
 
   if (reportsError) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-        日報の取得に失敗しました。ページを再読み込みしてください。
+      <div className="px-4 py-6">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+          日報の取得に失敗しました。ページを再読み込みしてください。
+        </div>
       </div>
     )
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
+    <div className="px-6 py-6">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-lg font-semibold text-zinc-900">チームの日報</h1>
           <p className="text-sm text-zinc-500">{reports?.length ?? 0}件</p>
@@ -74,11 +79,13 @@ export default async function ReportsPage({
         </Link>
       </div>
 
+      {/* 検索フィルター */}
       <Suspense fallback={<div className="text-sm text-zinc-400">読み込み中...</div>}>
         <SearchFilter users={users ?? []} />
       </Suspense>
 
-      <div className="space-y-3">
+      {/* カード一覧：mt-4でフィルターとの余白、space-y-4でカード間の余白 */}
+      <div className="mt-4 space-y-4">
         {reports?.length === 0 && (
           <p className="text-zinc-500 text-sm py-8 text-center">
             {q || userId || category || from || to
@@ -87,8 +94,8 @@ export default async function ReportsPage({
           </p>
         )}
         {reports?.map((report: DailyReport & { comments: { count: number }[] }) => (
-          <Link key={report.id} href={`/reports/${report.id}`}>
-            <div className="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer">
+          <Link key={report.id} href={`/reports/${report.id}`} className="block">
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 hover:shadow-md transition-shadow cursor-pointer">
               <div className="flex items-center gap-3 mb-2">
                 {report.profiles?.avatar_url ? (
                   <img

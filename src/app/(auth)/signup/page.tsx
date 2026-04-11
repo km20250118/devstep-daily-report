@@ -63,8 +63,9 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
-      <Card className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-300 px-4"
+      style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
+      <Card className="w-full max-w-sm bg-white">
         <CardHeader className="text-center">
           <div className="text-3xl mb-2">📋</div>
           <CardTitle>新規登録</CardTitle>
@@ -81,7 +82,7 @@ export default function SignupPage() {
                 onChange={(e) => setName(e.target.value)}
                 onBlur={(e) => handleBlur('name', e.target.value)}
                 placeholder="山田 太郎"
-                className={errors.name && touched.name ? 'border-red-500' : ''}
+                className={`bg-zinc-100 ${errors.name && touched.name ? 'border-red-500' : ''}`}
               />
               {errors.name && touched.name && <p className="text-xs text-red-500">{errors.name}</p>}
             </div>
@@ -94,7 +95,7 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 onBlur={(e) => handleBlur('email', e.target.value)}
                 placeholder="you@example.com"
-                className={errors.email && touched.email ? 'border-red-500' : ''}
+                className={`bg-zinc-100 ${errors.email && touched.email ? 'border-red-500' : ''}`}
               />
               {errors.email && touched.email && <p className="text-xs text-red-500">{errors.email}</p>}
             </div>
@@ -106,7 +107,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={(e) => handleBlur('password', e.target.value)}
-                className={errors.password && touched.password ? 'border-red-500' : ''}
+                className={`bg-zinc-100 ${errors.password && touched.password ? 'border-red-500' : ''}`}
               />
               {errors.password && touched.password && <p className="text-xs text-red-500">{errors.password}</p>}
             </div>
