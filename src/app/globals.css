@@ -71,3 +71,13 @@ textarea, [role="combobox"] {
 [data-theme="dark"] aside {
   border-right: 1px solid #3f3f46 !important;
 }
+
+/* iOS Safari 日付入力欄のはみ出し防止 */
+input[type="date"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  min-height: 2.25rem;
+}
