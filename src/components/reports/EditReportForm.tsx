@@ -119,7 +119,7 @@ export default function EditReportForm({ report }: { report: DailyReport }) {
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger className="cursor-pointer w-full bg-white"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="cursor-pointer w-full bg-white h-9"><SelectValue /></SelectTrigger>
               <SelectContent className="bg-white border border-zinc-200 shadow-md">
                 <SelectItem value="開発" className="cursor-pointer">開発</SelectItem>
                 <SelectItem value="会議" className="cursor-pointer">会議</SelectItem>
