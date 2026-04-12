@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Devstep Daily-report",
   description: "チームの日報を記録・共有するWebアプリケーション",
+  appleWebApp: {
+    title: "Devstep Daily-report",
+    capable: true,
+  },
 };
 
 export default function RootLayout({
