@@ -96,7 +96,7 @@ export default function SearchFilter({ users }: Props) {
       </div>
 
       {/* 日付：小さい画面では縦並び */}
-      <div className="flex flex-col xs:flex-row gap-2">
+      <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-col gap-1 flex-1 min-w-0">
           <span className="text-xs text-zinc-400">開始日</span>
           <Input
