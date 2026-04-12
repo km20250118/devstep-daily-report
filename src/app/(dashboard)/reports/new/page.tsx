@@ -138,7 +138,7 @@ export default function NewReportPage() {
           <div className="space-y-1.5">
             <Label>カテゴリ <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger className="cursor-pointer w-full bg-white h-8">
+              <SelectTrigger className="cursor-pointer w-full bg-white !h-8">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white border border-zinc-200 shadow-md">
