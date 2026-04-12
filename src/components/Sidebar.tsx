@@ -17,12 +17,12 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
     const id = 'dark-calendar-style'
     const existing = document.getElementById(id)
     if (existing) existing.remove()
-    const style = document.createElement('style')
-    style.id = id
-    style.textContent = isDark
-      ? 'input[type="date"],input[type="month"]{color-scheme:dark!important}'
-      : 'input[type="date"],input[type="month"]{color-scheme:light!important}'
-    document.head.appendChild(style)
+    if (isDark) {
+      const style = document.createElement('style')
+      style.id = id
+      style.textContent = 'input[type="date"],input[type="month"]{color-scheme:dark!important}'
+      document.head.appendChild(style)
+    }
   }
 
   useEffect(() => {
