@@ -87,3 +87,10 @@ input[type="date"] {
   height: 2rem !important;
   min-height: 2rem !important;
 }
+
+/* 日付・カテゴリ欄の高さを36pxに統一 */
+input[type="date"],
+[data-slot="select-trigger"] {
+  height: 36px !important;
+  min-height: 36px !important;
+}
