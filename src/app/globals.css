@@ -81,3 +81,9 @@ input[type="date"] {
   appearance: none !important;
   min-height: 2.25rem;
 }
+
+/* SelectTriggerの高さをInputに統一 */
+[data-slot="select-trigger"] {
+  height: 2rem !important;
+  min-height: 2rem !important;
+}
