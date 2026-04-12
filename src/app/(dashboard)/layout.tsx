@@ -19,7 +19,7 @@ export default async function DashboardLayout({
     .single()
 
   return (
-    <div className="flex h-screen bg-zinc-300" style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
+    <div className="flex h-screen" style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
       <Sidebar profile={profile} />
       <main className="flex-1 overflow-auto px-6 py-6 pt-16 md:pt-6">
         {children}

@@ -1,21 +1,73 @@
 @import "tailwindcss";
 
+/* ===== ライトモード ===== */
 body {
-  background-color: #d4d4d8;
+  background-color: #f4f4f5;
   color: #18181b;
   font-family:
-    "Noto Sans JP",
-    "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans",
-    "BIZ UDPGothic",
-    Meiryo,
-    sans-serif;
+    "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "BIZ UDPGothic", Meiryo, sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-/* 入力ボックスをライトグレーに統一 */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-textarea,
-[role="combobox"] {
-  background-color: #f4f4f5 !important;
+textarea, [role="combobox"] {
+  background-color: #ffffff !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #a1a1aa !important;
+}
+
+/* ===== ダークモード ===== */
+[data-theme="dark"] body {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+}
+
+/* カード：背景より少し明るくして境界を明確に */
+[data-theme="dark"] .bg-white {
+  background-color: #2a2a2d !important;
+  border-color: #3f3f46 !important;
+}
+
+[data-theme="dark"] .bg-zinc-50 { background-color: #2a2a2d !important; }
+[data-theme="dark"] .border-zinc-200 { border-color: #3f3f46 !important; }
+[data-theme="dark"] .border-zinc-100 { border-color: #3f3f46 !important; }
+[data-theme="dark"] .text-zinc-900 { color: #ffffff !important; }
+[data-theme="dark"] .text-zinc-700 { color: #e4e4e7 !important; }
+[data-theme="dark"] .text-zinc-500 { color: #a1a1aa !important; }
+[data-theme="dark"] .text-zinc-400 { color: #71717a !important; }
+
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] [role="combobox"] {
+  background-color: #1c1c1f !important;
+  color: #ffffff !important;
+  border-color: #52525b !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #71717a !important;
+}
+
+[data-theme="dark"] .hover\:bg-zinc-100:hover { background-color: #1a1a1a !important; }
+[data-theme="dark"] .bg-zinc-900 { background-color: #18181b !important; }
+[data-theme="dark"] .hover\:shadow-md:hover {
+  box-shadow: 0 4px 16px 0 rgba(255,255,255,0.1) !important;
+}
+
+[data-theme="dark"] [data-radix-popper-content-wrapper] .bg-white,
+[data-theme="dark"] [role="listbox"] {
+  background-color: #18181b !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* ダークモード：サイドバーとメイン画面の境界線 */
+[data-theme="dark"] aside {
+  border-right: 1px solid #3f3f46 !important;
 }

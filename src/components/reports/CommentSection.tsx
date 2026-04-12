@@ -57,7 +57,6 @@ export default function CommentSection({
 
   const handleDelete = async (commentId: string) => {
     if (!confirm('このコメントを削除しますか？')) return
-
     try {
       const supabase = createClient()
       const { error } = await supabase.from('comments').delete().eq('id', commentId)
@@ -70,12 +69,12 @@ export default function CommentSection({
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 bg-white border border-zinc-200 rounded-lg p-5">
       <h2 className="text-sm font-semibold text-zinc-900 mb-4">
         コメント（{comments.length}件）
       </h2>
 
-      <div className="space-y-1">
+      <div className="space-y-1 mb-4">
         {comments.map((comment) => (
           <div key={comment.id} className="py-3 border-b border-zinc-100 last:border-0">
             <div className="flex items-center gap-2 mb-1.5">
@@ -108,19 +107,43 @@ export default function CommentSection({
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-3 mt-4">
+      {/* 入力フォーム：縦並びでボタンを下に配置 */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="コメントを入力（500文字以内）"
-          rows={2}
-          className="flex-1 resize-none"
+          rows={3}
+          className="w-full resize-none bg-zinc-50"
           maxLength={500}
         />
-        <Button type="submit" disabled={loading || !content.trim()} className="self-end cursor-pointer">
-          {loading ? '送信中...' : '送信'}
-        </Button>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-zinc-400">{content.length}/500</span>
+          <Button
+            type="submit"
+            disabled={loading || !content.trim()}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                送信中...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+                送信
+              </span>
+            )}
+          </Button>
+        </div>
       </form>
+
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm mt-2">
           {error}
