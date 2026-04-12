@@ -154,7 +154,7 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
           >
             <div className="px-4 py-3 border-b border-zinc-700">
               <p className="text-xs text-zinc-400">ログイン中</p>
-              <p className="text-sm font-medium text-white truncate">{profile?.full_name ?? 'ユーザー'}</p>
+              <p className="text-sm font-medium text-white truncate">{profile?.name ?? 'ユーザー'}</p>
             </div>
             <nav className="flex-1 px-3 py-4 space-y-1">
               <NavLinks onClick={() => setMenuOpen(false)} />
@@ -176,7 +176,7 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
         </nav>
         <div className="px-3 py-4 border-t border-zinc-700 space-y-1">
           <div className="px-3 py-1">
-            <p className="text-xs text-zinc-400 truncate">{profile?.full_name ?? 'ユーザー'}</p>
+            <p className="text-xs text-zinc-400 truncate">{profile?.name ?? 'ユーザー'}</p>
           </div>
           <BottomLinks />
         </div>
