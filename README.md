@@ -155,19 +155,19 @@ npm run test
 # ユニットテスト（ウォッチモード）
 npm run test:watch
 
-# E2Eテスト（Playwright）- 別ターミナルで npm run dev を起動してから実行
-npm run test:e2e
-
 # カバレッジ計測
 npm run test:coverage
+
+# E2Eテスト（Playwright）※別ターミナルで npm run dev を起動してから実行
+npm run test:e2e
 ```
 
 ### テスト構成
 
-| 種別 | ファイル | 内容 |
-|---|---|---|
-| ユニットテスト | `src/test/unit/validation.test.ts` | バリデーション関数 15件 |
-| E2Eテスト | `tests/daily-report.spec.ts` | ログイン・日報作成・詳細表示・リダイレクト 4件 |
+| 種別 | ファイル | 内容 | カバレッジ |
+|---|---|---|---|
+| ユニットテスト | `src/test/unit/validation.test.ts` | バリデーション関数 15件 | 100% |
+| E2Eテスト | `tests/daily-report.spec.ts` | ログイン・日報作成・詳細表示・リダイレクト 4件 | - |
 
 ---
 
