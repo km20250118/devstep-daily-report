@@ -1,9 +1,15 @@
-# 📋 日報管理システム（devstep-daily-report）
+# 📋 Devstep Daily-report
 
 チームの日々の業務内容を記録・共有するWebアプリケーションです。  
 メンバーが日報を投稿し、チーム内でコメントを通じてフィードバックを行えます。
 
 > **デモURL:** https://devstep-daily-report-two.vercel.app
+
+---
+
+## スクリーンショット
+
+> スクリーンショットは `docs/screenshots/` フォルダに追加予定
 
 ---
 
@@ -37,7 +43,7 @@ open docs/wireframes.html
 | スタイリング | Tailwind CSS + shadcn/ui |
 | ストレージ | Supabase Storage（アバター画像） |
 | デプロイ | Vercel |
-| テスト | Vitest・Playwright |
+| テスト | Vitest（ユニット）・Playwright（E2E） |
 | CI/CD | GitHub Actions |
 
 ---
@@ -149,12 +155,33 @@ npm run test
 # ユニットテスト（ウォッチモード）
 npm run test:watch
 
-# E2Eテスト（Playwright）
+# E2Eテスト（Playwright）- 別ターミナルで npm run dev を起動してから実行
 npm run test:e2e
 
 # カバレッジ計測
 npm run test:coverage
 ```
+
+### テスト構成
+
+| 種別 | ファイル | 内容 |
+|---|---|---|
+| ユニットテスト | `src/test/unit/validation.test.ts` | バリデーション関数 15件 |
+| E2Eテスト | `tests/daily-report.spec.ts` | ログイン・日報作成・詳細表示・リダイレクト 4件 |
+
+---
+
+## CI/CD
+
+GitHub Actions により以下が自動実行されます。
+
+| トリガー | 実行内容 |
+|---|---|
+| `main` へのプッシュ | ユニットテスト・ビルド・型チェック |
+| PR作成時 | ユニットテスト・ビルド・型チェック |
+| `main` マージ時 | Vercel へ自動デプロイ |
+
+設定ファイル: `.github/workflows/ci.yml`
 
 ---
 
@@ -170,11 +197,23 @@ npm run test:coverage
 
 ## 開発プロセス
 
-> Week8完成時に記載予定
+詳細は [DEVELOPMENT.md](./DEVELOPMENT.md) を参照してください。
 
-- 工夫した点
-- 苦労した点
-- 今後の改善案
+### 工夫した点
+- ユーザー目線でのUI/UX改善（削除ボタンの赤ホバー・文字数カウンター・ローディング表示）
+- iPhoneとPCの両方で動作確認し、レスポンシブの細かい問題を修正
+- ダークモードをアプリ内で切り替えられるようにし、設定をローカルに保存
+
+### 苦労した点
+- Next.js 16の破壊的変更（`params` の非同期化）への対応
+- iOS Safariの独自仕様（日付入力・カレンダーアイコン）への対応
+- ハイドレーションエラーの原因特定と修正
+
+### 今後の改善案
+- ページネーション実装（現在は全件取得）
+- プッシュ通知（新しいコメント時）
+- 日報のCSVエクスポート機能
+- テストカバレッジのさらなる向上
 
 ---
 
