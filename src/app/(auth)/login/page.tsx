@@ -57,8 +57,18 @@ export default function LoginPage() {
       style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
       <Card className="w-full max-w-sm bg-white">
         <CardHeader className="text-center">
-          <div className="text-3xl mb-2">📋</div>
-          <CardTitle>日報管理システム</CardTitle>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="28" height="28" rx="6" fill="#18181b"/>
+              <path d="M6 8h16M6 14h10M6 20h13" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+              <circle cx="21" cy="20" r="3.5" fill="#6ee7b7"/>
+              <path d="M19.5 20l1 1 2-2" stroke="#065f46" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-sm font-black tracking-tight text-zinc-900 leading-tight text-left">
+              Devstep<br />Daily-report
+            </span>
+          </div>
+          <CardTitle className="text-base">日報管理システム</CardTitle>
           <CardDescription>チームの日報をまとめて管理</CardDescription>
         </CardHeader>
         <CardContent>

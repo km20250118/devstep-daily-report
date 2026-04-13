@@ -94,3 +94,22 @@ input[type="date"],
   height: 36px !important;
   min-height: 36px !important;
 }
+
+/* システムのダークモードに自動追従（ログイン・登録画面） */
+@media (prefers-color-scheme: dark) {
+  body:not([data-theme]) {
+    background-color: #18181b !important;
+    color: #ffffff !important;
+  }
+  body:not([data-theme]) .bg-white {
+    background-color: #1c1c1e !important;
+    border-color: #3f3f46 !important;
+  }
+  body:not([data-theme]) .text-zinc-900 { color: #fafafa !important; }
+  body:not([data-theme]) .text-zinc-500 { color: #a1a1aa !important; }
+  body:not([data-theme]) input:not([type="checkbox"]):not([type="radio"]) {
+    background-color: #2c2c2e !important;
+    color: #ffffff !important;
+    border-color: #3f3f46 !important;
+  }
+}
