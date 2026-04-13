@@ -10,13 +10,16 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/test/**/*.test.ts', 'src/test/**/*.test.tsx'],
     coverage: {
+      provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      include: ['src/lib/**'],
       exclude: [
         'node_modules/',
-        'src/test/',
         '**/*.d.ts',
         '**/*.config.*',
         'src/components/ui/**',
+        'src/lib/utils.ts',
+        'src/lib/supabase/**',
       ],
     },
   },
