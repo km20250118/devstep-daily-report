@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,14 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const prev = document.documentElement.getAttribute('data-theme')
+    document.documentElement.removeAttribute('data-theme')
+    return () => {
+      if (prev) document.documentElement.setAttribute('data-theme', prev)
+    }
+  }, [])
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +36,7 @@ export default function ResetPasswordPage() {
 
   if (sent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-300 px-4">
         <Card className="w-full max-w-sm">
           <CardHeader className="text-center">
             <CardTitle>メールを送信しました</CardTitle>
@@ -48,7 +56,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-300 px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle>パスワードリセット</CardTitle>

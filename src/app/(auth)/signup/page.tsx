@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -17,6 +17,14 @@ export default function SignupPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const prev = document.documentElement.getAttribute('data-theme')
+    document.documentElement.removeAttribute('data-theme')
+    return () => {
+      if (prev) document.documentElement.setAttribute('data-theme', prev)
+    }
+  }, [])
 
   const validateField = (name: string, value: string): string => {
     if (name === 'name' && !value.trim()) return '表示名は必須です'
