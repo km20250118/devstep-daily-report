@@ -53,7 +53,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-300 px-4"
+    <div className="min-h-screen flex items-center justify-center bg-zinc-300 px-4 dark-login-bg"
       style={{ fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif' }}>
       <Card className="w-full max-w-sm bg-white">
         <CardHeader className="text-center">

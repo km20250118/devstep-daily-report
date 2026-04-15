@@ -31,6 +31,8 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
       setDark(true)
       document.documentElement.setAttribute('data-theme', 'dark')
       applyCalendarStyle(true)
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light')
     }
   }, [])
 
@@ -41,7 +43,7 @@ export default function Sidebar({ profile }: { profile: Profile | null }) {
     if (next) {
       document.documentElement.setAttribute('data-theme', 'dark')
     } else {
-      document.documentElement.removeAttribute('data-theme')
+      document.documentElement.setAttribute('data-theme', 'light')
     }
     applyCalendarStyle(next)
   }
