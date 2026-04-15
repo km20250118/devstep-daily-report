@@ -9,7 +9,19 @@
 
 ## スクリーンショット
 
-> スクリーンショットは `docs/screenshots/` フォルダに追加予定
+### ライトモード
+
+| ログイン画面 | 日報一覧 | 日報詳細 |
+|---|---|---|
+| ![ログイン](docs/screenshots/login.png) | ![日報一覧](docs/screenshots/reports.png) | ![日報詳細](docs/screenshots/report-detail.png) |
+
+| 日報作成 | プロフィール |
+|---|---|
+| ![日報作成](docs/screenshots/report-new.png) | ![プロフィール](docs/screenshots/profile.png) |
+
+### ダークモード
+
+![ダークモード](docs/screenshots/dark-mode.png)
 
 ---
 
