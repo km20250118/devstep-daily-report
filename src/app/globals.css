@@ -78,8 +78,11 @@ textarea, [role="combobox"] {
   color: #ffffff !important;
 }
 
-/* ハンバーガーメニューの線は常にホワイト */
-span.block.h-0\.5 {
+/* ハンバーガーメニューの線は常にホワイト（最優先） */
+span.block.h-0\.5,
+span.block.h-0\.5.bg-white,
+span.block.h-0\.5.rounded,
+span.block.h-0\.5.w-full {
   background-color: #ffffff !important;
 }
 
@@ -106,22 +109,56 @@ input[type="date"],
   min-height: 36px !important;
 }
 
-/* システムのダークモードに自動追従（ログイン・登録画面のみ） */
+/* ログイン・登録画面はdata-themeに関係なくシステム設定に従う */
+
+/* ライトモード時（data-theme設定に関わらず上書き） */
+html .dark-login-bg,
+html[data-theme] .dark-login-bg {
+  background-color: #d4d4d8 !important;
+  color: #18181b !important;
+}
+html .dark-login-bg .bg-white,
+html[data-theme] .dark-login-bg .bg-white {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  color: #18181b !important;
+}
+html .dark-login-bg .text-zinc-900,
+html[data-theme] .dark-login-bg .text-zinc-900 { color: #18181b !important; }
+html .dark-login-bg .text-zinc-500,
+html[data-theme] .dark-login-bg .text-zinc-500 { color: #71717a !important; }
+html .dark-login-bg label,
+html[data-theme] .dark-login-bg label { color: #18181b !important; }
+html .dark-login-bg input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme] .dark-login-bg input:not([type="checkbox"]):not([type="radio"]) {
+  background-color: #ffffff !important;
+  color: #18181b !important;
+  border-color: #e4e4e7 !important;
+}
+
+/* ダークモード時（システム） */
 @media (prefers-color-scheme: dark) {
-  body:not([data-theme]) .dark-login-bg {
+  html .dark-login-bg,
+  html[data-theme] .dark-login-bg {
     background-color: #000000 !important;
     color: #ffffff !important;
   }
-  body:not([data-theme]) .bg-white {
+  html .dark-login-bg .bg-white,
+  html[data-theme] .dark-login-bg .bg-white {
     background-color: #1c1c1e !important;
     border-color: #3f3f46 !important;
     color: #ffffff !important;
   }
-  body:not([data-theme]) .text-zinc-900 { color: #ffffff !important; }
-  body:not([data-theme]) .text-zinc-700 { color: #ffffff !important; }
-  body:not([data-theme]) .text-zinc-500 { color: #a1a1aa !important; }
-  body:not([data-theme]) label { color: #ffffff !important; }
-  body:not([data-theme]) input:not([type="checkbox"]):not([type="radio"]) {
+  html .dark-login-bg .text-zinc-900,
+  html[data-theme] .dark-login-bg .text-zinc-900 { color: #ffffff !important; }
+  html .dark-login-bg .text-zinc-700,
+  html[data-theme] .dark-login-bg .text-zinc-700 { color: #ffffff !important; }
+  html .dark-login-bg .text-zinc-500,
+  html[data-theme] .dark-login-bg .text-zinc-500 { color: #a1a1aa !important; }
+  html .dark-login-bg label,
+  html[data-theme] .dark-login-bg label { color: #ffffff !important; }
+  html .dark-login-bg input:not([type="checkbox"]):not([type="radio"]),
+  html[data-theme] .dark-login-bg input:not([type="checkbox"]):not([type="radio"]) {
     background-color: #2c2c2e !important;
     color: #ffffff !important;
     border-color: #3f3f46 !important;
@@ -163,12 +200,146 @@ html[data-theme="light"] textarea::placeholder {
   color: #a1a1aa !important;
 }
 html[data-theme="light"] .hover\:bg-zinc-100:hover { background-color: #f4f4f5 !important; }
-html[data-theme="light"] span.block.h-0\.5 {
-  background-color: #ffffff !important;
-}
+/* ハンバーガー線はグローバルで管理 */
 html[data-theme="light"] [data-radix-popper-content-wrapper] .bg-white,
 html[data-theme="light"] [role="listbox"] {
   background-color: #ffffff !important;
   border-color: #e4e4e7 !important;
   color: #18181b !important;
+}
+
+/* ===== ログイン画面の最終上書き（最高優先度）===== */
+/* システムダークモード時 */
+@media (prefers-color-scheme: dark) {
+  html .dark-login-bg,
+  html[data-theme="light"] .dark-login-bg,
+  html[data-theme="dark"] .dark-login-bg {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+  }
+  html .dark-login-bg .bg-white,
+  html[data-theme="light"] .dark-login-bg .bg-white,
+  html[data-theme="dark"] .dark-login-bg .bg-white {
+    background-color: #1c1c1e !important;
+    border-color: #3f3f46 !important;
+    color: #ffffff !important;
+  }
+  html .dark-login-bg input,
+  html[data-theme="light"] .dark-login-bg input,
+  html[data-theme="dark"] .dark-login-bg input {
+    background-color: #2c2c2e !important;
+    color: #ffffff !important;
+    border-color: #3f3f46 !important;
+  }
+  html .dark-login-bg label,
+  html[data-theme="light"] .dark-login-bg label,
+  html[data-theme="dark"] .dark-login-bg label {
+    color: #ffffff !important;
+  }
+  html .dark-login-bg .text-zinc-900,
+  html[data-theme="light"] .dark-login-bg .text-zinc-900,
+  html[data-theme="dark"] .dark-login-bg .text-zinc-900 {
+    color: #ffffff !important;
+  }
+  html .dark-login-bg .text-zinc-500,
+  html[data-theme="light"] .dark-login-bg .text-zinc-500,
+  html[data-theme="dark"] .dark-login-bg .text-zinc-500 {
+    color: #a1a1aa !important;
+  }
+}
+
+/* システムライトモード時 */
+@media (prefers-color-scheme: light) {
+  html .dark-login-bg,
+  html[data-theme="light"] .dark-login-bg,
+  html[data-theme="dark"] .dark-login-bg {
+    background-color: #d4d4d8 !important;
+    color: #18181b !important;
+  }
+  html .dark-login-bg .bg-white,
+  html[data-theme="light"] .dark-login-bg .bg-white,
+  html[data-theme="dark"] .dark-login-bg .bg-white {
+    background-color: #ffffff !important;
+    border-color: #e4e4e7 !important;
+    color: #18181b !important;
+  }
+  html .dark-login-bg input,
+  html[data-theme="light"] .dark-login-bg input,
+  html[data-theme="dark"] .dark-login-bg input {
+    background-color: #ffffff !important;
+    color: #18181b !important;
+    border-color: #e4e4e7 !important;
+  }
+  html .dark-login-bg label,
+  html[data-theme="light"] .dark-login-bg label,
+  html[data-theme="dark"] .dark-login-bg label {
+    color: #18181b !important;
+  }
+  html .dark-login-bg .text-zinc-900,
+  html[data-theme="light"] .dark-login-bg .text-zinc-900,
+  html[data-theme="dark"] .dark-login-bg .text-zinc-900 {
+    color: #18181b !important;
+  }
+  html .dark-login-bg .text-zinc-500,
+  html[data-theme="light"] .dark-login-bg .text-zinc-500,
+  html[data-theme="dark"] .dark-login-bg .text-zinc-500 {
+    color: #71717a !important;
+  }
+}
+
+/* ===== ログイン画面専用（JSで切り替え・data-theme完全無視）===== */
+.login-light {
+  background-color: #d4d4d8 !important;
+  color: #18181b !important;
+}
+.login-light .bg-white {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  color: #18181b !important;
+}
+.login-light input { background-color: #ffffff !important; color: #18181b !important; border-color: #e4e4e7 !important; }
+.login-light label { color: #18181b !important; }
+.login-light .text-zinc-900 { color: #18181b !important; }
+.login-light .text-zinc-500 { color: #71717a !important; }
+
+.login-dark {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+.login-dark .bg-white {
+  background-color: #1c1c1e !important;
+  border-color: #3f3f46 !important;
+  color: #ffffff !important;
+}
+.login-dark input { background-color: #2c2c2e !important; color: #ffffff !important; border-color: #3f3f46 !important; }
+.login-dark label { color: #ffffff !important; }
+.login-dark .text-zinc-900 { color: #ffffff !important; }
+.login-dark .text-zinc-500 { color: #a1a1aa !important; }
+
+/* ログイン画面用：data-theme未設定時にシステム設定に追従 */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) body {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+  }
+  html:not([data-theme]) .bg-white {
+    background-color: #1c1c1e !important;
+    border-color: #3f3f46 !important;
+    color: #ffffff !important;
+  }
+  html:not([data-theme]) .text-zinc-900 { color: #ffffff !important; }
+  html:not([data-theme]) .text-zinc-500 { color: #a1a1aa !important; }
+  html:not([data-theme]) .text-zinc-400 { color: #71717a !important; }
+  html:not([data-theme]) label { color: #ffffff !important; }
+  html:not([data-theme]) input:not([type="checkbox"]):not([type="radio"]) {
+    background-color: #2c2c2e !important;
+    color: #ffffff !important;
+    border-color: #3f3f46 !important;
+  }
+  html:not([data-theme]) .bg-zinc-300 {
+    background-color: #000000 !important;
+  }
+  html:not([data-theme]) .bg-zinc-100 {
+    background-color: #2c2c2e !important;
+  }
 }
