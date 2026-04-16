@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -12,6 +11,8 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [touched, setTouched] = useState(false)
 
   useEffect(() => {
     const prev = document.documentElement.getAttribute('data-theme')
@@ -21,15 +22,29 @@ export default function ResetPasswordPage() {
     }
   }, [])
 
+  const validate = (value: string) => {
+    if (!value.trim()) return 'メールアドレスは必須です'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'メールアドレスの形式が正しくありません'
+    return ''
+  }
+
+  const handleBlur = () => {
+    setTouched(true)
+    setEmailError(validate(email))
+  }
+
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setTouched(true)
+    const err = validate(email)
+    setEmailError(err)
+    if (err) return
 
+    setLoading(true)
     const supabase = createClient()
     await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${location.origin}/reset-password/confirm`,
     })
-
     setSent(true)
     setLoading(false)
   }
@@ -63,17 +78,24 @@ export default function ResetPasswordPage() {
           <CardDescription>登録済みのメールアドレスを入力してください</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleReset} className="space-y-4">
-            <div className="space-y-2">
+          <form onSubmit={handleReset} className="space-y-4" noValidate>
+            <div className="space-y-1">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (touched) setEmailError(validate(e.target.value))
+                }}
+                onBlur={handleBlur}
                 placeholder="you@example.com"
-                required
+                className={touched && emailError ? 'border-red-500' : ''}
               />
+              {touched && emailError && (
+                <p className="text-xs text-red-500">{emailError}</p>
+              )}
             </div>
             <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? '送信中...' : 'リセットメールを送信'}

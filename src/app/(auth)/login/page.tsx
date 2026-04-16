@@ -13,33 +13,50 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({})
+  const [touched, setTouched] = useState<{ email?: boolean; password?: boolean }>({})
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // ログイン画面ではdata-themeを除去してシステム設定に従わせる
     const prev = document.documentElement.getAttribute('data-theme')
     document.documentElement.removeAttribute('data-theme')
     return () => {
-      // 離脱時にdata-themeを復元
       if (prev) document.documentElement.setAttribute('data-theme', prev)
     }
   }, [])
 
+  const validate = (fields = { email, password }) => {
+    const e: typeof errors = {}
+    if (!fields.email.trim()) e.email = 'メールアドレスは必須です'
+    if (!fields.password) e.password = 'パスワードは必須です'
+    return e
+  }
+
+  const handleBlur = (field: 'email' | 'password') => {
+    setTouched((prev) => ({ ...prev, [field]: true }))
+    setErrors((prev) => ({ ...prev, ...validate() }))
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) { setError('メールアドレスは必須です'); return }
-    if (!password) { setError('パスワードは必須です'); return }
+    setTouched({ email: true, password: true })
+    const errs = validate()
+    setErrors(errs)
+    if (Object.keys(errs).length > 0) return
+
     setLoading(true)
-    setError('')
+    setErrors({})
     try {
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) { setError('メールアドレスまたはパスワードが正しくありません'); return }
+      if (error) {
+        setErrors({ general: 'メールアドレスまたはパスワードが正しくありません' })
+        return
+      }
       router.push('/reports')
       router.refresh()
     } catch {
-      setError('ログインに失敗しました。再度お試しください。')
+      setErrors({ general: 'ログインに失敗しました。再度お試しください。' })
     } finally {
       setLoading(false)
     }
@@ -65,35 +82,43 @@ export default function LoginPage() {
           <CardDescription>チームの日報をまとめて管理</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            {error && (
+          <form onSubmit={handleLogin} className="space-y-4" noValidate>
+            {errors.general && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-                {error}
+                {errors.general}
               </div>
             )}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); if (touched.email) setErrors((prev) => ({ ...prev, ...validate({ email: e.target.value, password }) })) }}
+                onBlur={() => handleBlur('email')}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className="bg-zinc-100"
+                className={`bg-zinc-100 ${touched.email && errors.email ? 'border-red-500' : ''}`}
               />
+              {touched.email && errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="password">パスワード</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); if (touched.password) setErrors((prev) => ({ ...prev, ...validate({ email, password: e.target.value }) })) }}
+                onBlur={() => handleBlur('password')}
                 placeholder="••••••••"
                 autoComplete="current-password"
-                className="bg-zinc-100"
+                className={`bg-zinc-100 ${touched.password && errors.password ? 'border-red-500' : ''}`}
               />
+              {touched.password && errors.password && (
+                <p className="text-xs text-red-500">{errors.password}</p>
+              )}
               <div className="text-right">
                 <Link href="/reset-password" className="text-xs text-zinc-500 hover:underline">
                   パスワードを忘れた場合
