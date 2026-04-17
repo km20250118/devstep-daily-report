@@ -5,6 +5,8 @@
 
 > **デモURL:** https://devstep-daily-report-two.vercel.app
 
+> **デモ動画:** https://github.com/km20250118/devstep-daily-report/releases/download/v1.0.0/devstep-daily-report-demo.mov
+
 ---
 
 ## スクリーンショット
