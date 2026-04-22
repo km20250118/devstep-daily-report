@@ -11,7 +11,7 @@
 
 - Supabase RLS（Row Level Security）でAPIルートを介さずレコードレベルの権限制御を実装
 - サーバーコンポーネントで認証チェックをサーバー側で行い、セキュリティを強化
-- TypeScript strict: true + noUncheckedIndexedAccess + noImplicitReturns で型安全性を担保
+- TypeScript `strict: true` + `noUncheckedIndexedAccess` + `noImplicitReturns` で型安全性を担保
 **2. ユーザー目線のUI/UX**
 - リアルタイムバリデーション（フォーカスを外したタイミングでエラー表示）
 - ダークモード / ライトモード切り替え（設定をローカルに保存）
@@ -21,11 +21,11 @@
 **3. 実務要件の充足**
 - Vitest（ユニットテスト 15件・カバレッジ100%）+ Playwright（E2Eテスト 4件）
 - GitHub Actions によるCI/CD（PR作成時にテスト・ビルドを自動実行）
-- any 型使用ゼロ・TypeScriptエラーゼロ
+- `any` 型使用ゼロ・TypeScriptエラーゼロ
 
 ### 苦労した点と学び
 
-Next.js 16の params 非同期化やiOS Safariの独自仕様など、ドキュメントだけでは解決できない問題に直面しました。エラーメッセージを読み解き、原因を特定して修正するデバッグ力が身についたと感じています。
+Next.js 16の `params` 非同期化やiOS Safariの独自仕様など、ドキュメントだけでは解決できない問題に直面しました。エラーメッセージを読み解き、原因を特定して修正するデバッグ力が身についたと感じています。
 また、AIを活用しながらも「生成されたコードを理解してから採用する」ことを意識し、コードの意図を説明できる状態を保ちながら開発を進めました。
 
 ### 今後の展望
